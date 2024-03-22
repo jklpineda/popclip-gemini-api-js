@@ -1,0 +1,106 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue-Italic;\f1\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab560
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\i\fs26 \cf0 // #popclip extension for Google Gemini
+\f1\i0 \
+
+\f0\i // name: Gemini Translator
+\f1\i0 \
+
+\f0\i // icon: "iconify:ri:translate"
+\f1\i0 \
+
+\f0\i // language: javascript
+\f1\i0 \
+
+\f0\i // module: true
+\f1\i0 \
+
+\f0\i // entitlements: [network]
+\f1\i0 \
+
+\f0\i // options: [\{
+\f1\i0 \
+
+\f0\i //   identifier: apikey,
+\f1\i0 \
+
+\f0\i //   label: API Key,
+\f1\i0 \
+
+\f0\i //   type: string,
+\f1\i0 \
+
+\f0\i //   description: 'Obtain API key from https://cloud.google.com/ai-platform/prediction/docs/getting-started'
+\f1\i0 \
+
+\f0\i // \}]
+\f1\i0 \
+\
+"use strict";\
+\
+const axios = require("axios");\
+\
+async function translate(input, options) \{\
+  let prompt;\
+  const content = input.text.trim();\
+\
+  
+\f0\i // Detectar el idioma del texto seleccionado
+\f1\i0 \
+  const langDetector = new RegExp(/[^\\u0000-\\u007f]/);\
+  const isSpanish = langDetector.test(content);\
+\
+  if (isSpanish) \{\
+    prompt = `Translate the following Spanish text to English:\
+\
+$\{content\}`;\
+  \} else \{\
+    prompt = `Translate the following English text to Spanish:\
+\
+$\{content\}`;\
+  \}\
+\
+  const requestBody = \{\
+    "contents": [\{ "parts": [\{ "text": prompt \}] \}],\
+    "safetySettings": [\
+      \{ "category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_ONLY_HIGH" \}\
+    ],\
+    "generationConfig": \{\
+      "stopSequences": [],\
+      "temperature": 1.0,\
+      "maxOutputTokens": 800,\
+      "topP": 0.8,\
+      "topK": 10\
+    \}\
+  \};\
+\
+  try \{\
+    const response = await axios.post(\
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$\{options.apikey\}`,\
+      requestBody,\
+      \{ headers: \{ 'Content-Type': 'application/json' \} \}\
+    );\
+\
+    const translatedText = response.data.candidates[0].content.parts.map(part => part.text).join('');\
+    popclip.copyText(translatedText);\
+    return translatedText;\
+  \} catch (error) \{\
+    console.error("Error translating text:", error);\
+    popclip.showError("Error translating text: " + error.message);\
+  \}\
+\}\
+\
+exports.actions = [\
+  \{\
+    title: "Translate with Gemini",\
+    after: "copy-result",\
+    code: translate,\
+    icon: "iconify:ri:translate"\
+  \}\
+];}
