@@ -18,7 +18,7 @@ PopClip is a powerful productivity tool for macOS that provides quick access to 
 
 **Installation Steps:**
 ```
-✔ Install PopClip from the official website: [PopClip Extensions](https://www.popclip.app/extensions/).
+✔ Install PopClip from the official website: https://www.popclip.app/extensions/
 ✔ Open the JavaScript file (.js) containing the desired extension code.
 ✔ Select the text you want to work with.
 ✔ In the PopClip floating menu, you should see an option to "Install Extension." Click on it, and the extension will be added to PopClip.
@@ -35,7 +35,7 @@ These repositories and authors provide a wide range of PopClip extensions for di
 
 Author
 
-[jklpineda](https://github.com/jklpineda).
+[jklpineda](https://github.com/jklpineda)
 
 Requirements
 
