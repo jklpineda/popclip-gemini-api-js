@@ -46,4 +46,5 @@ Changelog
 2024-03-22
 ```
 ✔ First release
+✔ Files with the extension .popclipext were added to be installed directly with Popclip
 ```
